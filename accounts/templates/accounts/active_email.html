@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Activate Your Account</title>
+</head>
+<body>
+    <p>Click the link below to activate your account:</p>
+    <a href="{{ domain }}{% url 'activate_account' token=token %}">Activate Account</a>
+</body>
+</html>

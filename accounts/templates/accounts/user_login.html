@@ -1,0 +1,23 @@
+
+{% extends "base.html" %}
+{% block content %}
+
+{% load crispy_forms_tags %}
+<div class="w-75 m-auto">
+  <form method="post"  >
+    <h1 class="text-primary m-auto">Login  Here</h1>
+    {% csrf_token %}
+
+    {{form | crispy }}
+    <button class="btn btn-primary" type="submit">Log in</button>
+</form>
+{% if messages %}
+{% for message in messages %}
+    <div>{{ message }}</div>
+{% endfor %}
+{% endif %}
+{% endblock content %}
+
+   
+
+    
