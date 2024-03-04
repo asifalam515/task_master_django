@@ -4,18 +4,35 @@
 {% block content %}
   <h2>Your Tasks</h2>
 
+  <form method="get">
+    <label for="sort_by">Sort by:</label>
+    <select name="sort_by" id="sort_by">
+      <option value="due_date">Due Date</option>
+      <option value="priority">Priority</option>
+      <option value="category">Category</option>
+    </select>
+
+    <label for="filter_category">Filter by Category:</label>
+    <select name="filter_category" id="filter_category">
+      <option value="">All</option>
+      {% for category in categories %}
+        <option value="{{ category.name }}">{{ category.name }}</option>
+      {% endfor %}
+    </select>
+
+    <button type="submit">Apply</button>
+  </form>
+
   <ul>
     {% for task in tasks %}
       <li>
-        {{ task.title }}
+        {{ task.title }} - Due: {{ task.due_date }}, Priority: {{ task.priority }}, Category: {{ task.category.name }}
         {% if task.status %}
           <span style="color: green;">(Completed)</span>
         {% else %}
           <span style="color: red;">(Incomplete)</span>
         {% endif %}
-        <a href="{% url 'edit_task' task.id %}">Edit</a>
-        <a href="{% url 'delete_task' task.id %}">Delete</a>
-        <a href="{% url 'mark_completed' task.id %}">Mark Completed</a>
+        <!-- Add other task details as needed -->
       </li>
     {% endfor %}
   </ul>

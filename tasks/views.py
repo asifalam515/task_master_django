@@ -7,10 +7,29 @@ from django.contrib.auth.decorators import login_required
 from .models import Task
 from .forms import TaskForm
 
-@login_required
+# @login_required
+# def task_list(request):
+#     tasks = Task.objects.filter(user=request.user)
+#     return render(request, 'tasks/task_list.html', {'tasks': tasks})
 def task_list(request):
     tasks = Task.objects.filter(user=request.user)
+
+    # Sorting
+    sort_by = request.GET.get('sort_by')
+    if sort_by == 'due_date':
+        tasks = tasks.order_by('due_date')
+    elif sort_by == 'priority':
+        tasks = tasks.order_by('-priority')
+    elif sort_by == 'category':
+        tasks = tasks.order_by('category')
+
+    # Filtering
+    filter_category = request.GET.get('filter_category')
+    if filter_category:
+        tasks = tasks.filter(category=filter_category)
+
     return render(request, 'tasks/task_list.html', {'tasks': tasks})
+
 
 @login_required
 def create_task(request):
