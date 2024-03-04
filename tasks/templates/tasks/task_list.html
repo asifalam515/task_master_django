@@ -1,0 +1,24 @@
+<!-- task_list.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Your Tasks</h2>
+
+  <ul>
+    {% for task in tasks %}
+      <li>
+        {{ task.title }}
+        {% if task.status %}
+          <span style="color: green;">(Completed)</span>
+        {% else %}
+          <span style="color: red;">(Incomplete)</span>
+        {% endif %}
+        <a href="{% url 'edit_task' task.id %}">Edit</a>
+        <a href="{% url 'delete_task' task.id %}">Delete</a>
+        <a href="{% url 'mark_completed' task.id %}">Mark Completed</a>
+      </li>
+    {% endfor %}
+  </ul>
+
+  <a href="{% url 'create_task' %}">Create New Task</a>
+{% endblock %}
