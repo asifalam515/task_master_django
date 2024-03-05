@@ -6,7 +6,7 @@ from django.contrib.auth.views import LoginView,LogoutView
 from django.urls import reverse,reverse_lazy
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
-from django.contrib.auth import login
+from django.contrib.auth import login,logout,get_user_model
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
 from .forms import UserRegistrationForm
@@ -22,54 +22,80 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import UserAccount
 from django.contrib.auth.tokens import default_token_generator
 from django.views.generic.edit import CreateView
+from .tokens import account_activation_token
+from django.http import HttpResponse
 
 
 
 
-class UserRegistrationView(FormView):
-    template_name = 'accounts/user_registration.html'
-    form_class = UserRegistrationForm
-    success_url =reverse_lazy('home')
-    def form_valid(self, form):
-        # print(form.cleaned_data)
-        user = form.save() 
-        login(self.request,user)
-        print(user)
-        return super().form_valid(form) 
 
+# class UserRegistrationView(FormView):
+#     template_name = 'accounts/user_registration.html'
+#     form_class = UserRegistrationForm
+#     success_url =reverse_lazy('home')
+#     def form_valid(self, form):
+#         # print(form.cleaned_data)
+#         user = form.save() 
+#         login(self.request,user)
+#         print(user)
+#         return super().form_valid(form) 
+    
+def activate(request,uidb64,token):
+    User = get_user_model()
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except:
+        user = None
+    if user is not None and account_activation_token.check_token(user,token):
+        user.is_active = True
+        user.save()
+        messages.success(request,"Thanks you for your email confirmation.You can login here ")
+    else:
+        messages.error(request,"Activate link is Invalid")   
+    return redirect('home')
 
-# def register(request):
-#     if request.method == 'POST':
-#         form = UserCreationForm(request.POST)
-#         if form.is_valid():
-#             user = form.save(commit=False)
-#             user.is_active = False  # User is not active until they click the activation link
-#             user.save()
+def activateEmail(request,user,to_email):
+    mail_subject = "Activate Your user Account"
+    message = render_to_string("accounts/template_activate_account.html",
+    {
+        'user':user.username,
+        'domain':get_current_site(request).domain,
+        'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+        'token':account_activation_token.make_token(user),
+            'protocol':'https' if request.is_secure() else 'http'
+        
+    }
+ )
+    email = EmailMessage(mail_subject,message,to=[to_email])
+    if email.send():
+        messages.success(request,f"Dear {user},Please go to your email <b> {to_email} </b> inbox and click to the activation link ")
+    else:
+        message.error(request,f'problem to sending your email')
 
-#             # Create UserAccount instance
-#             user_account, created = UserAccount.objects.get_or_create(user=user)
-#             user_account.activation_token = default_token_generator.make_token(user)
-#             user_account.save()
+from django.http import HttpResponse
 
-#             # Send activation email
-#             current_site = get_current_site(request)
-#             mail_subject = 'Activate your account'
-#             message = render_to_string('accounts/activate_email.html', {
-#                 'user': user,
-#                 'domain': current_site.domain,
-#                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-#                 'token': user_account.activation_token,
-#             })
-#             to_email = form.cleaned_data.get('email')
-#             email = EmailMessage(mail_subject, message, to=[to_email])
-#             email.send()
+from django.shortcuts import render
 
-#             messages.success(request, 'Check email and activate your account.')
-#             return redirect('login')
-#     else:
-#         form = UserCreationForm()
+def register(request):
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.is_active = False
+            user.save()
 
-#     return render(request, 'accounts/user_registration.html', {'form': form})
+            activateEmail(request, user, form.cleaned_data.get('email'))
+            
+            # Render a success page or redirect to a success URL
+            return render(request, 'accounts/user_registration.html')
+
+    else:
+        form = UserRegistrationForm()
+
+    # Render the registration form again with validation errors
+    return render(request, 'accounts/user_registration.html', {'form': form})
+
 
 
 

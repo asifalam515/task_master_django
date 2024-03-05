@@ -1,14 +1,30 @@
 <!-- edit_task.html -->
 {% extends 'base.html' %}
 
+
 {% block content %}
+{% load crispy_forms_tags %}
+<section  class="" style="background-color: #eee;">
+  <div  class="container py-5 ">
+  <div class="row d-flex justify-content-center align-items-center ">
+  <div class="col col-lg-12 col-xl-12">
+  <div class="card rounded-3">
+  <div  class="card-body p-4"> 
   <h2>Edit Task - {{ task.title }}</h2>
 
   <form method="post" action="{% url 'edit_task' task.id %}">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save Changes</button>
+    {{ form|crispy }}
+    <button type="submit" class ="btn btn-secondary">Save Changes</button>
   </form>
 
   <a href="{% url 'task_list' %}">Back to Task List</a>
+
+
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
 {% endblock %}

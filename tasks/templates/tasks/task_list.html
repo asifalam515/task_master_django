@@ -1,8 +1,102 @@
-<!-- task_list.html -->
+
 {% extends 'base.html' %}
 
 {% block content %}
-  <h2>Your Tasks</h2>
+
+<section  class="vh-100" style="background-color: #eee;">
+<div  class="container py-5 ">
+<div class="row d-flex justify-content-center align-items-center ">
+<div class="col col-lg-12 col-xl-12">
+<div class="card rounded-3">
+<div  class="card-body p-4">
+  <h4 class="text-center my-3 pb-3">Your Tasks</h4>
+  <form method="get" class="mb-4">
+    <div class="row g-3 align-items-center">
+      <div class="col-auto">
+        <label for="sort_by" class="col-form-label">Sort by:</label>
+      </div>
+      <div class="col-auto">
+        <select class="form-select" name="sort_by" id="sort_by">
+          <option value="due_date">Due Date</option>
+          <option value="priority">Priority</option>
+          <option value="category">Category</option>
+        </select>
+      </div>
+  
+      <div class="col-auto">
+        <label for="filter_category" class="col-form-label">Filter by Category:</label>
+      </div>
+      <div class="col-auto">
+        <select class="form-select" name="filter_category" id="filter_category">
+          <option value="">All</option>
+          {% for category in categories %}
+            <option value="{{ category.name }}">{{ category.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+  
+      <div class="col-auto">
+        <button type="submit" class="btn btn-primary">Apply</button>
+      </div>
+    </div>
+  </form>
+
+
+  <table class="table mb-4">
+    <thead>
+      <tr>
+        <th scope="col">No.</th>
+        <th scope="col">Todo item</th>
+        <th scope="col">Due Date</th>
+        <th scope="col">Priority</th>
+        <th scope="col">Category</th>
+        <th scope="col">Status</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for task in tasks %}
+        <tr>
+          <th scope="row">{{ forloop.counter }}</th>
+          <td>{{ task.title }}</td>
+          <td>{{ task.due_date }}</td>
+          <td>{{ task.priority }}</td>
+          <td>{{ task.category.name }}</td>
+          <td>
+            {% if task.status %}
+              <span class="badge bg-success">Completed</span>
+            {% else %}
+              <span class="badge bg-danger">Incomplete</span>
+              <form method="post" style="display:inline;">
+                {% csrf_token %}
+              
+              </form>
+            {% endif %}
+          </td>
+          <td>
+            <a href="{% url 'edit_task' task.id %}" class="btn btn-warning btn-sm">Edit</a>
+            <button type="submit" formaction="{% url 'mark_completed' task.id %}" class="btn btn-success btn-sm">Mark as Complete</button>
+            <a href="{% url 'delete_task' task.id %}" class="btn btn-danger btn-sm">Delete</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <a href="{% url 'create_task' %}">Create New Task</a> 
+
+</div>
+
+</div>
+</div>
+
+</div>
+
+</div>
+</section>
+
+
+  {% comment %} <h2>Your Tasks</h2>
 
   <form method="get">
     <label for="sort_by">Sort by:</label>
@@ -31,11 +125,15 @@
           <span style="color: green;">(Completed)</span>
         {% else %}
           <span style="color: red;">(Incomplete)</span>
+          <form method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" formaction="{% url 'mark_completed' task.id %}">Mark as Complete</button>
+          </form>
         {% endif %}
         <!-- Add other task details as needed -->
       </li>
     {% endfor %}
   </ul>
 
-  <a href="{% url 'create_task' %}">Create New Task</a>
-{% endblock %}
+  <a href="{% url 'create_task' %}">Create New Task</a> {% endcomment %}
+{% endblock %} 

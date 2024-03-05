@@ -16,7 +16,7 @@ class Task(models.Model):
     category = models.CharField(max_length=255)
 
 
-    status = models.BooleanField(default=False)  # False for incomplete, True for completed
+    status = models.BooleanField(default=False) 
 
     def __str__(self):
         return self.title
