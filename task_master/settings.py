@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-k#if&cx90@+9%cplrk(_n0vgq@rrxsn(giqt%h_(z6@8wgga$g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['https://task-master-django.onrender.com','https://*.127.0.0.1']
+ALLOWED_HOSTS = ['task-master-django.onrender.com','https://*.127.0.0.1']
 
 
 # Application definition
