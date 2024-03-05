@@ -21,6 +21,28 @@ def send_email(user,subject,template):
         send_email.attach_alternative(message,"text/html")
         send_email.send()
 
+# @login_required
+# def task_list(request):
+#     tasks = Task.objects.filter(user=request.user)
+
+#     # Sorting
+#     sort_by = request.GET.get('sort_by')
+#     if sort_by == 'due_date':
+#         tasks = tasks.order_by('due_date')
+#     elif sort_by == 'priority':
+#         tasks = tasks.order_by('-priority')
+#     elif sort_by == 'category':
+#         tasks = tasks.order_by('category')
+    
+
+#     # Filtering
+#     filter_category = request.GET.get('filter_category')
+#     if filter_category:
+#         tasks = tasks.filter(category=filter_category)
+
+#     return render(request, 'tasks/task_list.html', {'tasks': tasks})
+
+
 @login_required
 def task_list(request):
     tasks = Task.objects.filter(user=request.user)
@@ -32,48 +54,14 @@ def task_list(request):
     elif sort_by == 'priority':
         tasks = tasks.order_by('-priority')
     elif sort_by == 'category':
-        tasks = tasks.order_by('category')
-    
+        tasks = tasks.order_by('category__name')  # Use 'category__name' to sort by category name
 
     # Filtering
     filter_category = request.GET.get('filter_category')
     if filter_category:
-        tasks = tasks.filter(category=filter_category)
+        tasks = tasks.filter(category__name=filter_category)  # Use 'category__name' for filtering
 
     return render(request, 'tasks/task_list.html', {'tasks': tasks})
-
-# @login_required
-# def task_list(request):
-#     # Fetch all tasks belonging to the current user
-#     tasks = Task.objects.filter(user=request.user)
-
-#     # Sorting
-#     sort_by = request.GET.get('sort_by')
-#     if sort_by == 'due_date':
-#         tasks = tasks.order_by('due_date')
-#     elif sort_by == 'priority':
-#         tasks = tasks.order_by('-priority')
-#     elif sort_by == 'category':
-#         tasks = tasks.order_by('category__name')  # Use the actual field in the category model
-
-#     # Filtering
-#     filter_category = request.GET.get('filter_category')
-#     if filter_category:
-#         tasks = tasks.filter(category__name=filter_category)  # Use the actual field in the category model
-
-#     # Task creation form handling
-#     if request.method == 'POST':
-#         form = TaskForm(request.POST)
-#         if form.is_valid():
-#             task = form.save(commit=False)
-#             task.user = request.user
-#             task.save()
-#             return redirect('task_list')
-#     else:
-#         form = TaskForm()
-
-#     return render(request, 'tasks/task_list.html', {'tasks': tasks, 'form': form})
-
 
 @login_required
 def create_task(request):

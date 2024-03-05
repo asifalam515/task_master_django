@@ -97,22 +97,6 @@ def register(request):
 
 
 
-# def activate(request, uidb64, token):
-#     try:
-#         uid = force_str(urlsafe_base64_decode(uidb64))
-#         user = User.objects.get(pk=uid)
-#         user_account = UserAccount.objects.get(user=user)
-#     except (TypeError, ValueError, OverflowError, User.DoesNotExist, UserAccount.DoesNotExist):
-#         user = None
-
-#     if user is not None and user_account is not None and default_token_generator.check_token(user, token):
-#         user_account.is_active = True
-#         user_account.save()
-#         messages.success(request, 'Your account has been activated. You can now log in.')
-#         return redirect('login')
-#     else:
-#         messages.error(request, 'Activation link is invalid or has expired.')
-#         return redirect('register')
 
     
 
