@@ -15,7 +15,7 @@
           <a href=" {% url "home" %} "><button class="btn btn-primary" type="submit">Home</button></a>
         </li>
         <li class="nav-item m-2">
-          <a href="  "><button class="btn btn-primary" type="submit">Profile</button></a>
+          <a href=" {% url "task_list" %}  "><button class="btn btn-primary" type="submit">Tasks</button></a>
          </li>
          
          <li class="nav-item m-2">
@@ -32,11 +32,11 @@
           <a href=" {% url "home" %} "><button class="btn btn-primary" type="submit">Home</button></a>
         </li>
          <li class="nav-item m-2">
-          <a href=" "><button class="btn btn-primary" type="submit">Login</button></a>
+          <a href=" {% url "login" %} "><button class="btn btn-primary" type="submit">Login</button></a>
         </li>
         
         <li class="nav-item m-2">
-          <a href="  "><button class="btn btn-primary" type="submit">Register</button></a>
+          <a href=" {% url "register" %} "><button class="btn btn-primary" type="submit">Register</button></a>
          </li>
          {% endif %}
           

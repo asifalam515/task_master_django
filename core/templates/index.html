@@ -11,10 +11,15 @@
     </script>
 {% endif %}
 
+ 
 
+<div class="container mx-auto row md:flex-row align-items-center my-12 md:my-24">
 
-<div class="container mx-auto d-flex flex-column md:flex-row align-items-center my-12 md:my-24">
-    <div class="flex flex-column w-100 lg:w-50 justify-content-center items-start pt-12 pb-24 px-6 bg-white rounded-2xl bg-opacity-70 mx-3">
+   
+    <div class='col-md-4'>
+        <img class ="rounded-2xl img-fluid" src ="{% static './img/to_do.png' %}"/>
+    </div> 
+    <div class="flex  col-md-4 flex-column w-50 lg:w-50 justify-content-center items-start pt-12 pb-24 px-6 bg-white rounded-2xl bg-opacity-70 mx-3">
         <h1 class="font-weight-bold text-4xl my-4">Welcome  to Task Master </h1>
         <p class="lead mb-4">
             This is a simple Task master application  where you can add your task,priority list and get more thing done in a little amount of time
@@ -27,9 +32,7 @@
         
 
     </div>
-    <div class="w-100 lg:w-50 lg:py-6 text-center">
-        {% comment %} <img class="rounded-2xl" src="{% static "img/bank.jpg" %}" alt="bank images"> {% endcomment %}
-    </div>
+    
 </div>
 
 {% endblock %}

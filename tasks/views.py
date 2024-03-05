@@ -33,6 +33,7 @@ def task_list(request):
         tasks = tasks.order_by('-priority')
     elif sort_by == 'category':
         tasks = tasks.order_by('category')
+    
 
     # Filtering
     filter_category = request.GET.get('filter_category')
