@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-k#if&cx90@+9%cplrk(_n0vgq@rrxsn(giqt%h_(z6@8wgga$g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://task-master-django.onrender.com','https://*.127.0.0.1']
 
 
 # Application definition
@@ -87,13 +87,19 @@ WSGI_APPLICATION = 'task_master.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+# Replace the SQLite DATABASES configuration with PostgreSQL:
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        # Replace this value with your local database's connection string.
+        default='postgres://task_master_csop_user:dUhi5NKiYv4VsKeRIduU6UzalRlh237l@dpg-cnjg89uct0pc73cauh80-a.oregon-postgres.render.com/task_master_csop'
+    )
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
