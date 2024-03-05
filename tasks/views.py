@@ -42,7 +42,9 @@ def task_list(request):
 
     return render(request, 'tasks/task_list.html', {'tasks': tasks})
 
+# @login_required
 # def task_list(request):
+#     # Fetch all tasks belonging to the current user
 #     tasks = Task.objects.filter(user=request.user)
 
 #     # Sorting
@@ -52,16 +54,25 @@ def task_list(request):
 #     elif sort_by == 'priority':
 #         tasks = tasks.order_by('-priority')
 #     elif sort_by == 'category':
-#         tasks = tasks.order_by('category__name')
+#         tasks = tasks.order_by('category__name')  # Use the actual field in the category model
 
 #     # Filtering
 #     filter_category = request.GET.get('filter_category')
 #     if filter_category:
-#         tasks = tasks.filter(category__name=filter_category)
+#         tasks = tasks.filter(category__name=filter_category)  # Use the actual field in the category model
 
-#     categories = Category.objects.all()
+#     # Task creation form handling
+#     if request.method == 'POST':
+#         form = TaskForm(request.POST)
+#         if form.is_valid():
+#             task = form.save(commit=False)
+#             task.user = request.user
+#             task.save()
+#             return redirect('task_list')
+#     else:
+#         form = TaskForm()
 
-#     return render(request, 'tasks/task_list.html', {'tasks': tasks, 'categories': categories})
+#     return render(request, 'tasks/task_list.html', {'tasks': tasks, 'form': form})
 
 
 @login_required

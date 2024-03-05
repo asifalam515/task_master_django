@@ -24,21 +24,14 @@ from django.contrib.auth.tokens import default_token_generator
 from django.views.generic.edit import CreateView
 from .tokens import account_activation_token
 from django.http import HttpResponse
+from .forms import UserRegistrationForm
+from rest_framework.views import APIView
+from django.core.mail import EmailMultiAlternatives
+from rest_framework.response import Response
+from django.http import JsonResponse
+from django.views import View
+from django.contrib.auth import authenticate, login
 
-
-
-
-
-# class UserRegistrationView(FormView):
-#     template_name = 'accounts/user_registration.html'
-#     form_class = UserRegistrationForm
-#     success_url =reverse_lazy('home')
-#     def form_valid(self, form):
-#         # print(form.cleaned_data)
-#         user = form.save() 
-#         login(self.request,user)
-#         print(user)
-#         return super().form_valid(form) 
     
 def activate(request,uidb64,token):
     User = get_user_model()
@@ -117,12 +110,16 @@ def activate(request, uidb64, token):
         return redirect('register')
 
     
-    
+
+
+
+
     
 class UserLoginView(LoginView):
     template_name ='accounts/user_login.html'
     def get_success_url(self) :
-        return reverse_lazy('register')
+        return reverse_lazy('home')
+    
     
 def user_logout(request):
     if request.user.is_authenticated:
