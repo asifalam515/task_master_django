@@ -85,13 +85,12 @@ def register(request):
             activateEmail(request, user, form.cleaned_data.get('email'))
             return redirect('home')
             
-        else:    # Render a success page or redirect to a success URL
+        else:    
             return render(request, 'accounts/user_registration.html')
 
     else:
         form = UserRegistrationForm()
 
-    # Render the registration form again with validation errors
     return render(request, 'accounts/user_registration.html', {'form': form})
 
 
