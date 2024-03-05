@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-k#if&cx90@+9%cplrk(_n0vgq@rrxsn(giqt%h_(z6@8wgga$g
 DEBUG = True
 
 ALLOWED_HOSTS = ['task-master-django.onrender.com','https://*.127.0.0.1']
-CSRF_TRUSTED_ORIGINS = ['task-master-django.onrender.com','https://*.127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://task-master-django.onrender.com','https://*.127.0.0.1']
 
 
 # Application definition
