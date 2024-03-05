@@ -31,44 +31,48 @@ from rest_framework.response import Response
 from django.http import JsonResponse
 from django.views import View
 from django.contrib.auth import authenticate, login
+from django.http import HttpResponse
+
+from django.shortcuts import render
 
     
-def activate(request,uidb64,token):
+def activate(request, uidb64, token):
     User = get_user_model()
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
-    except:
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
-    if user is not None and account_activation_token.check_token(user,token):
+
+    if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
-        messages.success(request,"Thanks you for your email confirmation.You can login here ")
+
+        messages.success(request, 'Thank you for your email confirmation. Now you can login your account.')
+        return redirect('login')
     else:
-        messages.error(request,"Activate link is Invalid")   
+        messages.error(request, 'Activation link is invalid!')
+    
     return redirect('home')
 
-def activateEmail(request,user,to_email):
-    mail_subject = "Activate Your user Account"
-    message = render_to_string("accounts/template_activate_account.html",
-    {
-        'user':user.username,
-        'domain':get_current_site(request).domain,
-        'uid':urlsafe_base64_encode(force_bytes(user.pk)),
-        'token':account_activation_token.make_token(user),
-            'protocol':'https' if request.is_secure() else 'http'
-        
-    }
- )
-    email = EmailMessage(mail_subject,message,to=[to_email])
+def activateEmail(request, user, to_email):
+    mail_subject = 'Activate your user account.'
+    message = render_to_string('accounts/template_activate_account.html', {
+        'user': user.username,
+        'domain': get_current_site(request).domain,
+        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+        'token': account_activation_token.make_token(user),
+        'protocol': 'https' if request.is_secure() else 'http'
+    })
+    email = EmailMessage(mail_subject, message, to=[to_email])
     if email.send():
-        messages.success(request,f"Dear {user},Please go to your email <b> {to_email} </b> inbox and click to the activation link ")
+        messages.success(request, f'Dear <b>{user}</b>, please go to you email <b>{to_email}</b> inbox and click on \
+            received activation link to confirm and complete the registration. <b>Note:</b> Check your spam folder.')
     else:
-        message.error(request,f'problem to sending your email')
+        messages.error(request, f'Problem sending confirmation email to {to_email}, check if you typed it correctly.')
+...
 
-from django.http import HttpResponse
 
-from django.shortcuts import render
 
 def register(request):
     if request.method == 'POST':
@@ -79,8 +83,9 @@ def register(request):
             user.save()
 
             activateEmail(request, user, form.cleaned_data.get('email'))
+            return redirect('home')
             
-            # Render a success page or redirect to a success URL
+        else:    # Render a success page or redirect to a success URL
             return render(request, 'accounts/user_registration.html')
 
     else:
@@ -92,26 +97,24 @@ def register(request):
 
 
 
-def activate(request, uidb64, token):
-    try:
-        uid = force_str(urlsafe_base64_decode(uidb64))
-        user = User.objects.get(pk=uid)
-        user_account = UserAccount.objects.get(user=user)
-    except (TypeError, ValueError, OverflowError, User.DoesNotExist, UserAccount.DoesNotExist):
-        user = None
+# def activate(request, uidb64, token):
+#     try:
+#         uid = force_str(urlsafe_base64_decode(uidb64))
+#         user = User.objects.get(pk=uid)
+#         user_account = UserAccount.objects.get(user=user)
+#     except (TypeError, ValueError, OverflowError, User.DoesNotExist, UserAccount.DoesNotExist):
+#         user = None
 
-    if user is not None and user_account is not None and default_token_generator.check_token(user, token):
-        user_account.is_active = True
-        user_account.save()
-        messages.success(request, 'Your account has been activated. You can now log in.')
-        return redirect('login')
-    else:
-        messages.error(request, 'Activation link is invalid or has expired.')
-        return redirect('register')
+#     if user is not None and user_account is not None and default_token_generator.check_token(user, token):
+#         user_account.is_active = True
+#         user_account.save()
+#         messages.success(request, 'Your account has been activated. You can now log in.')
+#         return redirect('login')
+#     else:
+#         messages.error(request, 'Activation link is invalid or has expired.')
+#         return redirect('register')
 
     
-
-
 
 
     
