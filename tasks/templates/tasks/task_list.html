@@ -56,6 +56,7 @@
         <th scope="col">Due Date</th>
         <th scope="col">Priority</th>
         <th scope="col">Category</th>
+        <th scope="col">Description</th>
         <th scope="col">Status</th>
         <th scope="col">Actions</th>
       </tr>
@@ -69,6 +70,7 @@
           <td>{{ task.due_date }}</td>
           <td>{{ task.priority }}</td>
           <td>{{ task.category.name }}</td>
+          <td>{{ task.description|truncatewords:2 }}</td>
           <td>
             {% if task.status %}
               <span class="badge bg-success">Completed</span>

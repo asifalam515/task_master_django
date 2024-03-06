@@ -21,6 +21,9 @@ def send_email(user,subject,template):
         send_email.attach_alternative(message,"text/html")
         send_email.send()
 
+
+
+
 # @login_required
 # def task_list(request):
 #     tasks = Task.objects.filter(user=request.user)
@@ -32,36 +35,39 @@ def send_email(user,subject,template):
 #     elif sort_by == 'priority':
 #         tasks = tasks.order_by('-priority')
 #     elif sort_by == 'category':
-#         tasks = tasks.order_by('category')
-    
+#         tasks = tasks.order_by('category__name') 
 
 #     # Filtering
 #     filter_category = request.GET.get('filter_category')
 #     if filter_category:
-#         tasks = tasks.filter(category=filter_category)
+#         tasks = tasks.filter(category__name=filter_category)  
 
 #     return render(request, 'tasks/task_list.html', {'tasks': tasks})
 
+from django.shortcuts import render
+from .models import Task, Category
 
-@login_required
 def task_list(request):
+    sort_by = request.GET.get('sort_by', 'due_date')  # Default sorting by due date
+    filter_category = request.GET.get('filter_category', '')
+
     tasks = Task.objects.filter(user=request.user)
 
-    # Sorting
-    sort_by = request.GET.get('sort_by')
+    if filter_category:
+        tasks = tasks.filter(category__name=filter_category)
+
+    # tasks = tasks.order_by(sort_by)
     if sort_by == 'due_date':
         tasks = tasks.order_by('due_date')
     elif sort_by == 'priority':
-        tasks = tasks.order_by('-priority')
+        tasks = tasks.order_by('-priority')  
     elif sort_by == 'category':
-        tasks = tasks.order_by('category__name')  # Use 'category__name' to sort by category name
+        tasks = tasks.order_by('category__name')
 
-    # Filtering
-    filter_category = request.GET.get('filter_category')
-    if filter_category:
-        tasks = tasks.filter(category__name=filter_category)  # Use 'category__name' for filtering
+    categories = Category.objects.all()
 
-    return render(request, 'tasks/task_list.html', {'tasks': tasks})
+    return render(request, 'tasks/task_list.html', {'tasks': tasks, 'categories': categories})
+
 
 @login_required
 def create_task(request):
