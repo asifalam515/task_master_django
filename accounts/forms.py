@@ -34,7 +34,7 @@ class UserRegistrationForm(UserCreationForm):
         fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']
 
     # Additional fields from UserAccount model
-    activation_token = forms.CharField(max_length=255, required=False)
+    # activation_token = forms.CharField(max_length=255, required=False)
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -45,7 +45,7 @@ class UserRegistrationForm(UserCreationForm):
 
             # Create or update UserAccount instance
             user_account, created = UserAccount.objects.get_or_create(user=user)
-            user_account.activation_token = self.cleaned_data.get('activation_token', '')
+            # user_account.activation_token = self.cleaned_data.get('activation_token', '')
             user_account.save()
 
         return user
